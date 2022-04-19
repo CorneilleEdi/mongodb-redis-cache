@@ -7,12 +7,12 @@ import { QuoteEntity, QuoteSchema } from './schemas/quote.schema';
 import { QuotesMapper } from './mapper/quotes.mapper';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([
-            { name: QuoteEntity.name, schema: QuoteSchema, collection: 'quotes' },
-        ]),
-    ],
-    controllers: [QuotesController],
-    providers: [QuotesRepository, QuotesMapper, QuotesService],
+  imports: [
+    MongooseModule.forFeature([
+      { name: QuoteEntity.name, schema: QuoteSchema, collection: 'quotes' },
+    ]),
+  ],
+  controllers: [QuotesController],
+  providers: [QuotesRepository, QuotesMapper, QuotesService],
 })
 export class QuotesModule {}

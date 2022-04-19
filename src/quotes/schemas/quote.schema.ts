@@ -5,11 +5,11 @@ export type QuoteDocument = QuoteEntity & Document;
 
 @Schema()
 export class QuoteEntity {
-    @Prop({ required: true })
-    author: string;
+  @Prop({ required: true })
+  author: string;
 
-    @Prop({ required: true })
-    content: string;
+  @Prop({ required: true })
+  content: string;
 }
 
 export const QuoteSchema = SchemaFactory.createForClass(QuoteEntity);

@@ -7,47 +7,47 @@ import { QuoteNotFoundException } from './exceptions/quote-not-found.exception';
 
 @Injectable()
 export class QuotesService {
-    constructor(private readonly quotesRepository: QuotesRepository) {}
+  constructor(private readonly quotesRepository: QuotesRepository) {}
 
-    async create(createQuoteDto: CreateQuoteDto) {
-        try {
-            return await this.quotesRepository.create(createQuoteDto);
-        } catch (e) {
-            throw new InternalServerErrorException(e.message ?? '');
-        }
+  async create(createQuoteDto: CreateQuoteDto) {
+    try {
+      return await this.quotesRepository.create(createQuoteDto);
+    } catch (e) {
+      throw new InternalServerErrorException(e.message ?? '');
     }
+  }
 
-    async findAll() {
-        return await this.quotesRepository.findAll();
+  async findAll() {
+    return await this.quotesRepository.findAll();
+  }
+
+  async findOne(id: string) {
+    try {
+      return await this.quotesRepository.findOne(id);
+    } catch (e) {
+      if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
+
+      throw new InternalServerErrorException(e.message ?? '');
     }
+  }
 
-    async findOne(id: string) {
-        try {
-            return await this.quotesRepository.findOne(id);
-        } catch (e) {
-            if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
+  async update(id: string, updateQuoteDto: UpdateQuoteDto) {
+    try {
+      return await this.quotesRepository.update(id, updateQuoteDto);
+    } catch (e) {
+      if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
 
-            throw new InternalServerErrorException(e.message ?? '');
-        }
+      throw new InternalServerErrorException(e.message ?? '');
     }
+  }
 
-    async update(id: string, updateQuoteDto: UpdateQuoteDto) {
-        try {
-            return await this.quotesRepository.update(id, updateQuoteDto);
-        } catch (e) {
-            if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
+  async remove(id: string) {
+    try {
+      return await this.quotesRepository.remove(id);
+    } catch (e) {
+      if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
 
-            throw new InternalServerErrorException(e.message ?? '');
-        }
+      throw new InternalServerErrorException(e.message ?? '');
     }
-
-    async remove(id: string) {
-        try {
-            return await this.quotesRepository.remove(id);
-        } catch (e) {
-            if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
-
-            throw new InternalServerErrorException(e.message ?? '');
-        }
-    }
+  }
 }

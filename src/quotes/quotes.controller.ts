@@ -5,30 +5,30 @@ import { UpdateQuoteDto } from './dto/update-quote.dto';
 
 @Controller('quotes')
 export class QuotesController {
-    constructor(private readonly quotesService: QuotesService) {}
+  constructor(private readonly quotesService: QuotesService) {}
 
-    @Post()
-    create(@Body() createQuoteDto: CreateQuoteDto) {
-        return this.quotesService.create(createQuoteDto);
-    }
+  @Post()
+  create(@Body() createQuoteDto: CreateQuoteDto) {
+    return this.quotesService.create(createQuoteDto);
+  }
 
-    @Get()
-    findAll() {
-        return this.quotesService.findAll();
-    }
+  @Get()
+  findAll() {
+    return this.quotesService.findAll();
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.quotesService.findOne(id);
-    }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.quotesService.findOne(id);
+  }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateQuoteDto: UpdateQuoteDto) {
-        return this.quotesService.update(id, updateQuoteDto);
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateQuoteDto: UpdateQuoteDto) {
+    return this.quotesService.update(id, updateQuoteDto);
+  }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.quotesService.remove(id);
-    }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.quotesService.remove(id);
+  }
 }

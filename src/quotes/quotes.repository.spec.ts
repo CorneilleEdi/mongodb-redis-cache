@@ -2,14 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { QuotesRepository } from './quotes.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { QuoteEntity, QuoteSchema } from './schemas/quote.schema';
-import { GenericContainer } from 'testcontainers';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { QuotesMapper } from './mapper/quotes.mapper';
 import { faker } from '@faker-js/faker';
 
 describe('QuotesRepository', () => {
   let repository: QuotesRepository;
   let module: TestingModule;
-  let container;
+  let container: StartedTestContainer;
 
   const MONGODB_PASSWORD = 'f2gBUp8ofdVwga1NTNunbXm6X30k13';
   const MONGODB_USERNAME = 'sonic';
@@ -29,7 +29,7 @@ describe('QuotesRepository', () => {
         MongooseModule.forRootAsync({
           useFactory: async () => {
             const host = container.getHost();
-            const port = container.getMappedPort(27017);
+            const port = container.getMappedPort(MONGODB_PORT);
             return {
               uri: `mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${host}:${port}`,
             };

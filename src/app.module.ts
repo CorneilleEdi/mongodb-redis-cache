@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigurationModule, CONFIGURATIONS } from './shared/configuration';
 import { QuotesModule } from './quotes/quotes.module';
+import { RedisModule } from './shared/libs/redis';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { QuotesModule } from './quotes/quotes.module';
       },
       inject: [ConfigService],
     }),
+    RedisModule,
     QuotesModule,
   ],
   controllers: [AppController],

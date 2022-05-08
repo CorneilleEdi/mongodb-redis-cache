@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationShutdown } from '@nestjs/common';
 import { QuotesService } from './quotes.service';
 import { QuotesController } from './quotes.controller';
 import { QuotesRepository } from './quotes.repository';
@@ -18,4 +18,12 @@ import { RedisModule } from '../shared/libs/redis';
   controllers: [QuotesController],
   providers: [QuotesRepository, QuotesMapper, QuotesService, QuotesEventsListenerService],
 })
-export class QuotesModule {}
+export class QuotesModule implements OnApplicationShutdown {
+  constructor(private readonly listenerService: QuotesEventsListenerService) {}
+
+  onApplicationShutdown(signal?: string): any {
+    try {
+      this.listenerService.closeChangeStream().then();
+    } catch (e) {}
+  }
+}

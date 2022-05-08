@@ -18,7 +18,6 @@ export class QuotesEventsListenerService {
   ) {
     redisRepository.setPrefix('mongoCache');
     this.changeStream = quotesRepository.getModel().collection.watch();
-
     this.changeStream.on('change', async (event) => {
       const documentId = event.documentKey._id.toString();
 
@@ -72,5 +71,9 @@ export class QuotesEventsListenerService {
     } catch (e) {
       this.logger.error('Cache deletion error', e);
     }
+  }
+
+  async closeChangeStream() {
+    await this.changeStream.close();
   }
 }

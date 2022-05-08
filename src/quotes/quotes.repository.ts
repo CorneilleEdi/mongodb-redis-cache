@@ -13,6 +13,10 @@ export class QuotesRepository {
     private readonly quotesMapper: QuotesMapper,
   ) {}
 
+  getModel() {
+    return this.quoteModel;
+  }
+
   async create(quote: any): Promise<Quote> {
     const q = new this.quoteModel(quote);
     const quoteDoc = await q.save();

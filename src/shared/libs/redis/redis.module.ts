@@ -2,10 +2,11 @@ import { redisProviders } from './redis.provider';
 import { RedisService } from './redis.service';
 import { Logger, Module, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigurationModule } from '../../configuration';
+import { RedisRepository } from './redis.repository';
 
 @Module({
-  providers: [...redisProviders, RedisService],
-  exports: [...redisProviders, RedisService],
+  providers: [...redisProviders, RedisService, RedisRepository],
+  exports: [...redisProviders, RedisService, RedisRepository],
   imports: [ConfigurationModule],
 })
 export class RedisModule implements OnApplicationShutdown {

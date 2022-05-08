@@ -1,13 +1,22 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 import { UpdateQuoteDto } from './dto/update-quote.dto';
 import { QuotesRepository } from './quotes.repository';
 import { QuoteNotExistError } from './exceptions/quote-not-exist.error';
 import { QuoteNotFoundException } from './exceptions/quote-not-found.exception';
+import { RedisRepository } from '../shared/libs/redis';
+import { Quote } from './types/quote';
 
 @Injectable()
 export class QuotesService {
-  constructor(private readonly quotesRepository: QuotesRepository) {}
+  logger: Logger = new Logger();
+
+  constructor(
+    private readonly quotesRepository: QuotesRepository,
+    private readonly redisRepository: RedisRepository<Quote>,
+  ) {
+    redisRepository.setPrefix('mongoCache');
+  }
 
   async create(createQuoteDto: CreateQuoteDto) {
     try {
@@ -18,17 +27,29 @@ export class QuotesService {
   }
 
   async findAll() {
-    return await this.quotesRepository.findAll();
+    let quotes: Quote[] = [];
+    try {
+      quotes = await this.redisRepository.findAll();
+    } catch (e) {
+      this.logger.error('find all quotes error', e);
+      quotes = await this.quotesRepository.findAll();
+    }
+    return quotes;
   }
 
   async findOne(id: string) {
+    let quote: Quote;
+
     try {
-      return await this.quotesRepository.findOne(id);
+      quote = await this.redisRepository.get(id);
+      if (!quote) quote = await this.quotesRepository.findOne(id);
     } catch (e) {
       if (e instanceof QuoteNotExistError) throw new QuoteNotFoundException(id);
 
       throw new InternalServerErrorException(e.message ?? '');
     }
+
+    return quote;
   }
 
   async update(id: string, updateQuoteDto: UpdateQuoteDto) {

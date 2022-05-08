@@ -6,7 +6,7 @@ import { Quote } from '../types/quote';
 export class QuotesMapper {
   quoteDocumentToQuote(quoteDocument: QuoteDocument): Quote {
     return {
-      id: quoteDocument.id,
+      id: quoteDocument._id?.toString() ?? quoteDocument.id,
       author: quoteDocument.author,
       content: quoteDocument.content,
     };
